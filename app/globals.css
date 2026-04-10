@@ -1,26 +1,249 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Core palette */
+  --color-primary-white: #FFFBFC;
+  --color-blush-white: #FFF4F7;
+  --color-soft-pink: #FBE7EF;
+  --color-border-pink: #F1D5DE;
+  --color-rose-accent: #B76E8A;
+  --color-rose-hover: #9F5C75;
+  --color-text-secondary: #6E4C57;
+  --color-text-primary: #2A1F23;
+  --color-footer-bg: #8C4F65;
+  --color-white: #FFFFFF;
+  --color-red-accent: #E8635A;
+  --color-pink-primary: #B76E8A;
+  --font-sans: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #FFFBFC;
+  color: #2A1F23;
+  font-family: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #FFF4F7; }
+::-webkit-scrollbar-thumb { background: #F1D5DE; border-radius: 2px; }
+
+::selection { background-color: #F1D5DE; color: #2A1F23; }
+
+:focus-visible {
+  outline: 1.5px solid #B76E8A;
+  outline-offset: 2px;
+}
+
+/* Scroll progress bar */
+.scroll-progress {
+  transform-origin: left;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee 35s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in { animation: fadeIn 0.5s ease forwards; }
+
+/* =============================================
+   TYPOGRAPHY
+   ============================================= */
+
+/* Display / editorial headings */
+.font-display {
+  font-family: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  font-weight: 400; /* editorial weight — not just 300 */
+}
+
+/* Major section headings — authoritative dark tone */
+.heading-display {
+  font-family: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  font-weight: 400;
+  color: #2A1F23;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+/* =============================================
+   NAVBAR
+   ============================================= */
+.navbar-logo-heart {
+  opacity: 0;
+  transform: scale(0.5) translateX(-4px);
+  transition: all 0.3s ease;
+}
+.group:hover .navbar-logo-heart {
+  opacity: 1;
+  transform: scale(1) translateX(0);
+}
+
+/* =============================================
+   PRODUCT CARDS — PREMIUM
+   ============================================= */
+.product-card {
+  background-color: #FBE7EF;
+  border-radius: 20px;
+  border: 1px solid #F1D5DE;
+  box-shadow: 0 2px 8px rgba(42, 31, 35, 0.04);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px -12px rgba(183, 110, 138, 0.18),
+              0 4px 16px -4px rgba(183, 110, 138, 0.1);
+  border-color: rgba(183, 110, 138, 0.35);
+}
+
+/* Product name link — stronger authority */
+.product-name {
+  color: #2A1F23;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+  letter-spacing: 0.01em;
+}
+.product-name:hover {
+  opacity: 0.7;
+}
+
+/* =============================================
+   BUTTONS
+   ============================================= */
+
+/* Primary CTA — strong, confident */
+.btn-primary {
+  background-color: #B76E8A;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 11px;
+  transition: background-color 0.25s ease,
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease;
+}
+.btn-primary:hover {
+  background-color: #9F5C75;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -6px rgba(183, 110, 138, 0.45);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Secondary button — refined, not faded */
+.btn-secondary {
+  background-color: #fff;
+  color: #B76E8A;
+  border: 1.5px solid #F1D5DE;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 10px;
+  transition: background-color 0.25s ease,
+              border-color 0.25s ease,
+              color 0.25s ease,
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease;
+}
+.btn-secondary:hover {
+  background-color: #FFF4F7;
+  border-color: #B76E8A;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px -6px rgba(183, 110, 138, 0.2);
+}
+
+/* =============================================
+   SECTION DIVIDERS
+   ============================================= */
+.section-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #F1D5DE, transparent);
+}
+
+/* =============================================
+   LABELS & BADGES
+   ============================================= */
+.label-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #B76E8A;
+}
+
+.label-meta {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6E4C57;
+}
+
+/* =============================================
+   FILTER PILLS
+   ============================================= */
+.filter-pill {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  border: 1.5px solid #F1D5DE;
+  color: #6E4C57;
+  background-color: transparent;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.filter-pill:hover {
+  border-color: #B76E8A;
+  color: #B76E8A;
+}
+.filter-pill.active {
+  background-color: #B76E8A;
+  border-color: #B76E8A;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* =============================================
+   INPUT FIELDS
+   ============================================= */
+.input-refined {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid #F1D5DE;
+  padding: 1rem 0;
+  font-size: 0.875rem;
+  color: #2A1F23;
+  outline: none;
+  transition: border-color 0.25s ease;
+  width: 100%;
+}
+.input-refined::placeholder {
+  color: rgba(110, 76, 87, 0.4);
+}
+.input-refined:focus {
+  border-bottom-color: #B76E8A;
 }
