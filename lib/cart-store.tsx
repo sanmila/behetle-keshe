@@ -24,6 +24,7 @@ interface CartStore {
   count: number;
   subtotal: number;
   loading: boolean;
+  hydrated: boolean;
   error: string | null;
   add: (productId: string, quantity?: number) => Promise<void>;
   update: (id: string, quantity: number) => Promise<void>;
@@ -37,9 +38,11 @@ export const useCartStore = create<CartStore>((set, get) => ({
   count: 0,
   subtotal: 0,
   loading: false,
+  hydrated: false,
   error: null,
 
   refresh: async () => {
+    set({ loading: true, error: null });
     try {
       const res = await fetch("/api/cart");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -47,9 +50,9 @@ export const useCartStore = create<CartStore>((set, get) => ({
       const items: CartItem[] = data.items || [];
       const count = items.reduce((sum, i) => sum + i.quantity, 0);
       const subtotal = items.reduce((sum, i) => sum + (i.product.price || 0) * i.quantity, 0);
-      set({ items, count, subtotal, loading: false, error: null });
+      set({ items, count, subtotal, loading: false, hydrated: true, error: null });
     } catch (err) {
-      set({ loading: false, error: err instanceof Error ? err.message : "Failed to load cart" });
+      set({ loading: false, hydrated: true, error: err instanceof Error ? err.message : "Failed to load cart" });
     }
   },
 
@@ -71,11 +74,11 @@ export const useCartStore = create<CartStore>((set, get) => ({
       const items: CartItem[] = data.items || [];
       const count = items.reduce((sum, i) => sum + i.quantity, 0);
       const subtotal = items.reduce((sum, i) => sum + (i.product.price || 0) * i.quantity, 0);
-      set({ items, count, subtotal, loading: false, error: null });
+      set({ items, count, subtotal, loading: false, hydrated: true, error: null });
       toast.success("Товар добавлен в корзину");
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Failed to add to cart";
-      set({ loading: false, error: msg });
+      set({ loading: false, hydrated: true, error: msg });
       toast.error(msg);
     }
   },

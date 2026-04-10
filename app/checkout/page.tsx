@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
@@ -11,7 +11,7 @@ import Footer from "../components/Footer";
 
 export default function CheckoutPage() {
   const { t, lang } = useI18n();
-  const { items } = useCartStore();
+  const { items, refresh, loading, hydrated } = useCartStore();
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [orderNumber, setOrderNumber] = useState("");
@@ -19,6 +19,12 @@ export default function CheckoutPage() {
     name: "", email: "", address: "", city: "", state: "", zip: "", country: "Россия",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (!hydrated) {
+      void refresh();
+    }
+  }, [hydrated, refresh]);
 
   const subtotal = items.reduce((s, i) => s + Number(i.product.price) * i.quantity, 0);
 
@@ -45,10 +51,22 @@ export default function CheckoutPage() {
     });
     const data = await res.json();
     if (data.orderNumber) {
+      await refresh();
       setOrderNumber(data.orderNumber);
       setStep(3);
     }
   };
+
+  if (!hydrated || (loading && items.length === 0 && step < 3)) {
+    return (
+      <div className="min-h-screen bg-[#FFF8F5]">
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center flex-col gap-4">
+          <p className="text-[#8A7D70]">Loading your cart...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (items.length === 0 && step < 3) {
     return (

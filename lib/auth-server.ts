@@ -23,12 +23,12 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return bcrypt.compare(password, hash);
 }
 
-export function setAuthCookie(token: string) {
+export function setAuthCookie(token: string, secure: boolean) {
   return {
     name: "auth_token",
     value: token,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure,
     sameSite: "strict" as const,
     maxAge: 60 * 60 * 24 * 7,
     path: "/",

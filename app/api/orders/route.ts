@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth-server";
 import { normalizeProductImage } from "@/lib/product-images";
+import { shouldUseSecureCookies } from "@/lib/request-cookie-security";
 
 const CART_COOKIE = "cart_id";
 
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json({ orderNumber: order.orderNumber, orderId: order.id });
     response.cookies.set(CART_COOKIE, "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: shouldUseSecureCookies(req),
       sameSite: "lax",
       maxAge: 0,
       path: "/",

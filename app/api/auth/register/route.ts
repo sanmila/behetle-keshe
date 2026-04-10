@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { hashPassword, createToken, setAuthCookie } from "@/lib/auth-server";
+import { shouldUseSecureCookies } from "@/lib/request-cookie-security";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
     });
 
     const token = createToken(user.id, user.isAdmin);
-    const cookie = setAuthCookie(token);
+    const cookie = setAuthCookie(token, shouldUseSecureCookies(req));
 
     const response = NextResponse.json({ user: { id: user.id, email: user.email, name: user.name } });
     response.cookies.set(cookie);

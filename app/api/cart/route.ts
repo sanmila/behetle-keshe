@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import prisma from "@/lib/prisma";
 import { normalizeCartItems } from "@/lib/product-images";
+import { shouldUseSecureCookies } from "@/lib/request-cookie-security";
 
 const CART_COOKIE = "cart_id";
 
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
     // Set cart cookie
     response.cookies.set(CART_COOKIE, cart.id, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: shouldUseSecureCookies(req),
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 30,
       path: "/",
