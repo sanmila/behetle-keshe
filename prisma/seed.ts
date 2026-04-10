@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import bcrypt from "bcryptjs";
-import { getDatabaseUrl, resolveSqliteFilePath } from "@/lib/runtime-config";
+import { getDatabaseUrl, resolveSqliteFilePath } from "../lib/runtime-config";
 
 const dbPath = resolveSqliteFilePath(getDatabaseUrl());
 const adapter = new PrismaBetterSqlite3({ url: `file:${dbPath}` });

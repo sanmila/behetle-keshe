@@ -1,5 +1,5 @@
 import { defineConfig } from "prisma/config";
-import { getDatabaseUrl } from "@/lib/runtime-config";
+import { getDatabaseUrl } from "./lib/runtime-config";
 
 export default defineConfig({
   schema: "./prisma/schema.prisma",
