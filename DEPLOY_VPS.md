@@ -2,7 +2,7 @@
 
 This app is configured for a standard Linux VPS deployment with:
 
-- Next.js standalone output
+- Next.js standalone output with copied static/public assets
 - Prisma + SQLite
 - PM2 process management
 - Nginx reverse proxy
@@ -47,6 +47,8 @@ npm install
 cd /var/www/happy-man/current
 npm run build
 ```
+
+The build script also prepares `.next/standalone` with the required `public/` and `.next/static/` files for production runtime.
 
 ## 4. Create And Seed The Database
 
